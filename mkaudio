@@ -1,0 +1,156 @@
+#!/bin/bash
+#
+# mkreadme - creates a Readme.html in all subdirectories. Assumes a directory
+#     and file structure of Artist/Album/Tracks.
+#
+# A quick way to populate my USB flash drive with HTML documents to provide
+# an initial way to navigate around. This currently only dives two levels
+# deep to allow for Artist/Album/Tracks directory structure:
+#
+# Artist Name/
+#     Album Name/
+#         Pics/if-any.jpg (put cover art and other pics in Pics folder)
+#         Track1.m4a
+#         Track2.m4a (and so on, any file format)
+#         Year (contents of Year file should just be year released in parens)
+#
+# Written 23-Aug-2012 by Ronnie Record <flash@ronrecord.com>
+#
+# You can customize here with your own name, email, etc
+URL="http://about.me/ronrecord"
+FIRST="Ronnie"
+LAST="Record"
+EMAIL="flash@ronrecord.com"
+ADDRESS="522 Laurent Street, Santa Cruz, CA 95060"
+# End customize section
+
+H=`pwd`
+R="Readme.html"
+HEAD="<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">
+<html>
+<head>
+<title>"
+BODY="</title>
+<meta name=\"Generator\" content=\"Vim/7.2\">
+<meta http-equiv=\"content-type\" content=\"text/html; charset=iso-8859-1\">
+</head>
+<body><font face=\"monospace\">
+<br>"
+TRACKS="Tracklist:<br><br>"
+ALBUMS="Album:<br><br>"
+TAIL="<br>
+Enjoy!<br>
+<a href=\"$URL\">$FIRST $LAST</a><br>
+<a href=\"mailto:$EMAIL\">$EMAIL</a><br>
+</font></body>
+</html>"
+
+Create_Readme() {
+    echo $HEAD > $R
+    echo "$1" >> $R
+    echo $BODY >> $R
+    echo "<h1>$1</h1><br>" >> $R
+}
+
+Add_Album() {
+    [ "$1" = "Readme.html" ] || {
+      [ "$1" = "*" ] || {
+          echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"./$1/Readme.html\">
+$1</a><br>" >> $R
+      }
+    }
+}
+
+Add_Track() {
+    [ "$1" = "Readme.html" ] || {
+      [ "$1" = "*" ] || {
+          echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"./$1\">
+$1</a><br>" >> $R
+      }
+    }
+}
+
+Top=
+[ -f $R ] || {
+    Top=1
+    echo "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">
+<html>
+<head>
+<title>$FIRST's USB Stick</title>
+<meta name=\"Generator\" content=\"Vim/7.2\">
+<meta http-equiv=\"content-type\" content=\"text/html; charset=iso-8859-1\">
+</head>
+<body><font face=\"monospace\">
+This USB stick belongs to $FIRST $LAST.<br>
+Please return to $ADDRESS<br>
+or drop it of with one of the bartenders at burger. :)<br>
+<br>
+Contact $FIRST via email: <a href=\"mailto:$EMAIL\">
+$EMAIL</a><br>
+<br>
+Contents:<br>
+<br>
+<ul>" > $R
+}
+
+for i in *
+do
+    [ -d "$i" ] && {
+        cd "$i"
+	[ "$Top" ] && {
+	    echo "<li><a href=\"$i/Readme.html\">$i</a><br><ul>" >> ../$R
+        }
+	Created=
+        [ -f $R ] || {
+	    Create_Readme "$i"
+            echo $ALBUMS >> $R
+	    Created=1
+	}
+        for j in *
+        do
+    	    [ -d "$j" ] && {
+	        cd "$j"
+	        [ "$Top" ] && {
+		    y=
+		    [ -r Year ] && y=`cat Year`
+	            echo "<li><a href=\"$i/$j/Readme.html\">
+$i - &quot;$j&quot; $y</a><br>" >> ../../$R
+                }
+                [ -f $R ] || {
+	            Create_Readme "$j"
+		    echo "<h2>$i</h2><br><br>" >> $R
+                    echo $TRACKS >> $R
+	            for k in *
+	            do
+			[ "$k" = "Year" ] && continue
+			[ -d "$k" ] && continue
+	                Add_Track "$k"
+	            done
+		    [ -d Pics ] && {
+		        for pic in Pics/*
+			do
+			    [ "$pic" = "Pics/*" ] && continue
+			    echo "<br><a href=\"$pic\"><img src=\"$pic\" alt=\"$pic\" border=0><br>" >> $R
+			done
+	            }
+		    echo $TAIL >> $R
+	        }
+		cd ..
+	    }
+	    [ "$Created" ] && {
+	        Add_Album "$j"
+	    }
+	done
+        [ "$Created" ] && {
+	    echo $TAIL >> $R
+	}
+	cd ..
+        [ "$Top" ] && {
+            echo "<br></ul>" >> $R
+        }
+    }
+    cd "$H"
+done
+[ "$Top" ] && {
+    echo "</ul><br></font></body></html>" >> $R
+}

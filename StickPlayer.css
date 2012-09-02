@@ -1,0 +1,130 @@
+#button_bar div{
+	float:left;
+	margin-right:5px;	
+}
+
+#button_bar{
+	float:left;
+	margin-bottom:10px;
+}
+
+#PagePlayerWrapper{
+	width:30%;
+	margin-left:10%;
+	border: 2px solid black;
+	padding:5px;
+}
+#PagePlayerList{
+	width:100%;
+	float:left;
+}
+#PagePlayerList h3{
+	font-size:12px;
+	padding:0px;
+	margin:0px;
+}
+#PagePlayerListDescWrapper{
+	clear:both;
+}
+
+#PagePlayerCredit{
+  font-size:12px;
+  text-align:center;
+}
+
+.PagePlayerListItemSelected{
+	margin-bottom:1px;
+	border:2px solid #999;
+	padding:2px;
+	-moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+}
+.PagePlayerListItem{
+	color:white;
+	margin-bottom:1px;
+	border:2px solid #666;
+	background-color:#999;
+	padding:2px;
+	font-size:12px;
+	-moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+}
+
+.PagePlayerListItem h3{
+	cursor:pointer;
+}
+
+#volume_control{
+	width:40%;
+	height:15px;
+	border: 2px solid #0a0;
+	float:left;
+}
+
+#volume_background{
+	width:100%;
+	height:15px;
+	background-color:#ddd;
+}
+
+#volume_bar{
+	width:0px;
+	height:15px;
+	background-color:#0a0;
+	opacity:0.4;	
+}
+
+#duration{
+	width:100%;
+	height:15px;
+	border: 2px solid #50b;
+	margin-bottom:5px;
+}
+
+#duration_background{
+	width:100%;
+	height:15px;
+	background-color:#ddd;
+}
+
+#duration_bar{
+	width:0px;
+	height:15px;
+	background-color:#50b;
+	opacity:0.4;
+}
+
+.button{
+	color: black;
+	border: 2px solid #ddd;
+	cursor:pointer;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	background:no-repeat center;
+	height:20px;
+}
+
+/* add the images to the backgrounds of the buttons */
+#play{
+	background-image:url("images/play.png");
+	width:20px;
+}
+
+#pause{
+	background-image:url("images/pause.png");
+	width:20px;
+	display:none;
+}
+
+#previous{
+	background-image:url("images/previous.png");
+	width:25px;
+}
+
+#next{
+	background-image:url("images/next.png");
+	width:25px;
+}
